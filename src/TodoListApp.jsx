@@ -27,6 +27,7 @@ function TodoListApp() {
     return (!savedTodos) ? [] : JSON.parse(savedTodos); //string -> JSON 객체 또는 리스트
   }
   const [todos, setTodos] = useState(initTodos);
+  const [searchTerm, setSearchTerm] = useState('');
   //todos 변경 시, LocalStorage에 todos 저장하자
   useEffect(() => {
     localStorage.setItem(TODOS_STORAGE_KEY, JSON.stringify(todos)); //JSON 객체 또는 리스트 -> string
@@ -67,11 +68,22 @@ function TodoListApp() {
       )
     )
   }
+  const filteredTodos = todos.filter((todo) =>
+    todo.text.includes(searchTerm)
+  );
+
   return (
     <div className="todo">
       <TodoHeader />
+      <input
+        type="text"
+        className="todo__input"
+        placeholder="검색어를 입력하세요."
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)}
+      />
       <TodoAdder addTodo={addTodo} />
-      <TodoList todos={todos} toggleTodo={toggleTodo} deleteTodo={deleteTodo} editTodo={editTodo}/>
+      <TodoList todos={filteredTodos} toggleTodo={toggleTodo} deleteTodo={deleteTodo} editTodo={editTodo}/>
     </div>
   )
 }
